@@ -13,8 +13,6 @@ function Login() {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 
-		window.alert("hello");
-
 		// Check if email and password are provided
 		if (!email || !password) {
 			setError("Please provide both email and password.");
@@ -27,19 +25,13 @@ function Login() {
 			// Send a POST request to your backend for authentication
 			const response = await fetch("http://localhost:8080/api/user/login", {
 				method: "POST",
-				credentials: 'include', // 'same-origin', 'omit', or 'include'
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ email, password }),
 			});
 
-			window.alert(response.data);
-
-			
-			console.log("response: ", response);
-	
-			if (response.statusCode === 401) {
+			if (!response.ok) {
 				// Handle authentication failure
 				setError("Invalid email or password. Please try again.");
 				return;
