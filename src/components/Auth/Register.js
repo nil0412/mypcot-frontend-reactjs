@@ -5,7 +5,7 @@ function Register() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [gender, setGender] = useState(""); // Assuming you have a dropdown for gender
+	const [gender, setGender] = useState("male"); // Assuming you have a dropdown for gender
 
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(false);
@@ -20,22 +20,21 @@ function Register() {
 		}
 
 		try {
-			setSuccess(null);
+			setSuccess(false);
 			setError(null);
 
 			// Send a POST request to your backend for registration
-			const response = await fetch("http://localhost:8000/api/user/register", {
+			const response = await fetch("http://localhost:8080/api/user/register", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ name, email, password, gender }),
-        credentials: 'include', 
 			});
-
+			
 			if (!response.ok) {
 				// Handle registration failure
-				setError("Registration failed. Please try again.");
+				setError("Registration failed. Please try again.....");
 				return;
 			}
 
@@ -47,7 +46,7 @@ function Register() {
 			setName("");
 			setEmail("");
 			setPassword("");
-			setGender("");
+			setGender("male");
 		} catch (error) {
 			console.error("Registration error:", error);
 			setError(
@@ -135,8 +134,7 @@ function Register() {
 						name="gender"
 						value={gender}
 						onChange={(e) => setGender(e.target.value)}
-						required
-						defaultValue={"male"}>
+						required>
 						<option value="male">Male</option>
 						<option value="female">Female</option>
 						<option value="other">Other</option>

@@ -8,10 +8,12 @@ function Login() {
 
 	const navigate = useNavigate(); // Initialize the useHistory hook
 
-  const [statusCode, setStatusCode] = useState(null);
+	const [statusCode, setStatusCode] = useState(null);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
+
+		window.alert("hello");
 
 		// Check if email and password are provided
 		if (!email || !password) {
@@ -20,23 +22,33 @@ function Login() {
 		}
 
 		try {
-
 			setError(null);
 
 			// Send a POST request to your backend for authentication
-			const response = await fetch("http://localhost:8000/api/user/login", {
+			const response = await fetch("http://localhost:8080/api/user/login", {
 				method: "POST",
+				credentials: 'include', // 'same-origin', 'omit', or 'include'
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ email, password }),
 			});
 
-			if (!response.ok) {
+			window.alert(response.data);
+
+			
+			console.log("response: ", response);
+	
+			if (response.statusCode === 401) {
 				// Handle authentication failure
 				setError("Invalid email or password. Please try again.");
 				return;
+			
 			}
+
+			// const { token } = response.data;
+			// // Store the JWT token in localStorage or a secure cookie
+			// localStorage.setItem("token", token);
 
 			// Successful login, you can redirect or update the UI as needed
 			// For example, you might set a user authentication state
@@ -55,9 +67,9 @@ function Login() {
 	useEffect(() => {
 		// Check the status code and navigate to another page if it's not a failure (e.g., 200)
 		if (statusCode === 200) {
-		  navigate('/records/create'); // Replace with your target route
+			navigate("/records/create"); // Replace with your target route
 		}
-	  }, [statusCode, navigate]);
+	}, [statusCode, navigate]);
 
 	return (
 		<div className="back">

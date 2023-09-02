@@ -14,6 +14,7 @@ import CategoryList from "./Categories/CategoryList";
 import CategoryForm from "./Categories/CategoryForm";
 import SingleRecord from "./Records/SingleRecord";
 import Layout from "./Layout";
+import PrivateRoutes from "./PrivateRoutes";
 
 function App() {
 	// Simulated authentication state
@@ -35,27 +36,19 @@ function App() {
 				{/* Add navigation or header here if needed */}
 				<Routes>
 					{/* Public Routes */}
-					<Route path="/" element={<Home />} isLoggedIn={isLoggedIn} />
-					<Route
-						path="/login"
-						element={<Login />}
-						render={(props) =>
-							!isLoggedIn ? (
-								<Login {...props} onLogin={handleLogin} />
-							) : (
-								<Navigate to="/dashboard" replace={true} />
-							)
-						}
-					/>
+					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
 
 					{/* Private Routes (require authentication) */}
-					<Route path="/records" element={<RecordList />} />
-					<Route path="/records/:id" element={<SingleRecord />} />
-					<Route path="/records/create" element={<RecordForm />} />
-					<Route path="/records/edit/:id" element={<RecordForm />} />
-					<Route path="/categories" element={<CategoryList />} />
-					<Route path="/categories/create" element={<CategoryForm />} />
+					<Route element={<PrivateRoutes />}>
+						<Route path="/" element={<Home />} />
+						<Route path="/records" element={<RecordList />} />
+						<Route path="/records/:id" element={<SingleRecord />} />
+						<Route path="/records/create" element={<RecordForm />} />
+						<Route path="/records/edit/:id" element={<RecordForm />} />
+						<Route path="/categories" element={<CategoryList />} />
+						<Route path="/categories/create" element={<CategoryForm />} />
+					</Route>
 
 					{/* Add more routes as needed */}
 					{/* </Route> */}
