@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../Context/UserContext";
 
 function Register() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [gender, setGender] = useState("male"); // Assuming you have a dropdown for gender
+
+	const [userContext, setUserContext] = useContext(UserContext);
 
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(false);
@@ -24,14 +27,18 @@ function Register() {
 			setError(null);
 
 			// Send a POST request to your backend for registration
-			const response = await fetch("http://localhost:8080/api/user/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ name, email, password, gender }),
-			});
-			
+			const response = await fetch(
+				process.env.REACT_APP_API_ENDPOINT + "api/user/register",
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ name, email, password, gender }),
+				}
+			);
+
 			if (!response.ok) {
 				// Handle registration failure
 				setError("Registration failed. Please try again.....");
@@ -47,6 +54,11 @@ function Register() {
 			setEmail("");
 			setPassword("");
 			setGender("male");
+
+			const data = await response.json();
+			setUserContext((oldValues) => {
+				return { ...oldValues, token: data.token };
+			});
 		} catch (error) {
 			console.error("Registration error:", error);
 			setError(
@@ -56,102 +68,89 @@ function Register() {
 	};
 
 	return (
-		<div className="container mt-5">
-			<h3>Register</h3>
-			{error && (
-				<div className="alert alert-danger" role="alert">
-					{error}
-				</div>
-			)}
-			{success && (
-				<div class="alert alert-success" role="alert">
-					Registration successful!
-				</div>
-			)}
+		<div className="back">
+			<div className="div-center">
+				<div className="content">
+					<h3>Register</h3>
+					{error && (
+						<div className="alert alert-danger" role="alert">
+							{error}
+						</div>
+					)}
+					{success && (
+						<div className="alert alert-success" role="alert">
+							Registration successful!
+						</div>
+					)}
+					<hr></hr>
 
-			<form onSubmit={handleRegister}>
-				<div className="form-group row">
-					<label htmlFor="name" className="col-sm-2 col-form-label">
-						Name
-					</label>
-					<div className="col-sm-10">
-						<input
-							type="text"
-							className="form-control"
-							id="name"
-							name="name"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							required
-							placeholder="Name"
-						/>
-					</div>
-				</div>
+					<form onSubmit={handleRegister}>
+						<div className="form-group">
+							<label htmlFor="name">Name</label>
+							<input
+								type="text"
+								className="form-control"
+								id="name"
+								name="name"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								required
+								placeholder="Name"
+							/>
+						</div>
 
-				<div className="form-group row">
-					<label htmlFor="email" className="col-sm-2 col-form-label">
-						Email
-					</label>
-					<div className="col-sm-10">
-						<input
-							type="email"
-							className="form-control"
-							id="email"
-							name="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-							placeholder="Email"
-						/>
-					</div>
-				</div>
+						<div className="form-group">
+							<label htmlFor="email">Email</label>
+							<input
+								type="email"
+								className="form-control"
+								id="email"
+								name="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								required
+								placeholder="Email"
+							/>
+						</div>
 
-				<div className="form-group row">
-					<label htmlFor="password" className="col-sm-2 col-form-label">
-						Password
-					</label>
-					<div className="col-sm-10">
-						<input
-							type="password"
-							className="form-control"
-							id="password"
-							name="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-							placeholder="Password"
-						/>
-					</div>
-				</div>
+						<div className="form-group">
+							<label htmlFor="password">Password</label>
+							<input
+								type="password"
+								className="form-control"
+								id="password"
+								name="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required
+								placeholder="Password"
+							/>
+						</div>
 
-				<div className="col-auto my-1">
-					<label className="mr-sm-2 sr-only" htmlFor="gender">
-						Gender
-					</label>
-					<select
-						className="custom-select mr-sm-2"
-						id="gender"
-						name="gender"
-						value={gender}
-						onChange={(e) => setGender(e.target.value)}
-						required>
-						<option value="male">Male</option>
-						<option value="female">Female</option>
-						<option value="other">Other</option>
-					</select>
-				</div>
-				<div className="form-group row">
-					<div className="col-sm-10">
+						<div className="form-group">
+							<label htmlFor="gender">Gender</label>
+							<select
+								className="form-control"
+								id="gender"
+								name="gender"
+								value={gender}
+								onChange={(e) => setGender(e.target.value)}
+								required>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+								<option value="other">Other</option>
+							</select>
+						</div>
+						<hr></hr>
 						<button type="submit" className="btn btn-primary">
 							Register
 						</button>
-					</div>
+						<hr />
+						<Link to="/login" class="btn btn-link">
+							Go to Login</Link>
+					</form>
 				</div>
-				<hr />
-				<button type="button" className="btn btn-link">
-					<Link to="/login">Login</Link>
-				</button>
-			</form>
+			</div>
 		</div>
 	);
 }

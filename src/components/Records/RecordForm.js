@@ -43,10 +43,10 @@ function RecordForm() {
 
 			<form onSubmit={handleSubmit}>
 				<div className="row mb-3">
-					<label for="name" className="col-sm-2 col-form-label">
+					<label htmlFor="name" className="col-sm-2 col-form-label">
 						Name
 					</label>
-          <hr/>
+					<hr />
 					<div className="col-sm-10">
 						<input
 							type="text"
@@ -60,10 +60,10 @@ function RecordForm() {
 				</div>
 
 				<div className="form-group">
-					<label for="description" className="col-sm-2 col-form-label">
+					<label htmlFor="description" className="col-sm-2 col-form-label">
 						Description
 					</label>
-          <hr/>
+					<hr />
 					<textarea
 						className="form-control"
 						id="description"
@@ -76,40 +76,31 @@ function RecordForm() {
 					<label className="mr-sm-2 sr-only" htmlFor="category">
 						Category
 					</label>
-          <hr/>
+					<hr />
 					<select
-						className="custom-select mr-sm-2"
+						className="custom-select mr-sm-2 p-2"
 						id="category"
 						name="category"
 						value={category}
 						onChange={(e) => setCategory(e.target.value)}
-						required
-						defaultValue={"category-1"}>
+						required>
 						<option value="category-1">Category 1</option>
 						<option value="category-2">Category 2</option>
 						<option value="category-3">Category 3</option>
 					</select>
 				</div>
-        <hr/>
-        <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-				<div className="row mb-3">
-					<div className="col-sm-10 offset-sm-2">
-						<div className="form-check">
-							<input
-								className="form-check-input"
-								type="checkbox"
-								id="checkbox"
-								checked={active}
-								onChange={(e) => setActive(e.target.checked)}
-							/>
-							<label className="form-check-label" for="checkbox">
-								Example checkbox
-							</label>
-						</div>
-					</div>
+				<hr />
+				<div className="form-check">
+					<input
+						type="checkbox"
+						className="form-check-input"
+						id="checkbox"
+						checked={active}
+						onChange={(e) => setActive(e.target.checked)}
+					/>
+					<label className="form-check-label" htmlFor="exampleCheck1">
+						Active
+					</label>
 				</div>
 				<button type="submit" className="btn btn-primary">
 					Create Record

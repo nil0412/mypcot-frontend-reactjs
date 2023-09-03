@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/UserContext";
 
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
+	const [userContext, setUserContext] = useContext(UserContext)
 
 	const navigate = useNavigate(); // Initialize the useHistory hook
 
 	const [statusCode, setStatusCode] = useState(null);
+
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -23,8 +26,9 @@ function Login() {
 			setError(null);
 
 			// Send a POST request to your backend for authentication
-			const response = await fetch("http://localhost:8080/api/user/login", {
+			const response = await fetch(process.env.REACT_APP_API_ENDPOINT+"api/user/login", {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -50,6 +54,10 @@ function Login() {
 			setEmail("");
 			setPassword("");
 			setError(null);
+			const data = await response.json();
+			setUserContext(oldValues => {
+				return { ...oldValues, token: data.token }
+			  })
 		} catch (error) {
 			console.error("Login error:", error);
 			setError("An error occurred during login. Please try again later.");
@@ -107,9 +115,8 @@ function Login() {
 							Login
 						</button>
 						<hr />
-						<button type="button" className="btn btn-link">
-							<Link to="/register">Register</Link>
-						</button>
+							<Link to="/register" className="btn btn-link">Register new User</Link>
+						
 					</form>
 				</div>
 			</div>
