@@ -116,6 +116,7 @@ function Login() {
 						</button>
 						<hr />
 							<Link to="/register" className="btn btn-link">Register new User</Link>
+							<Link to="/" className="btn btn-link">Home</Link>
 						
 					</form>
 				</div>

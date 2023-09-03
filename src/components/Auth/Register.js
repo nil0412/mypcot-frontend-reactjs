@@ -147,7 +147,11 @@ function Register() {
 						</button>
 						<hr />
 						<Link to="/login" class="btn btn-link">
-							Go to Login</Link>
+							Go to Login
+						</Link>
+						<Link to="/" className="btn btn-link">
+							Home
+						</Link>
 					</form>
 				</div>
 			</div>
