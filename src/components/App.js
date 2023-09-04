@@ -3,62 +3,47 @@ import {
 	BrowserRouter as Router,
 	Route,
 	Routes,
-	Navigate,
 } from "react-router-dom";
 
-import Loader from "./Loader"
-import Home from "./Home";
-import Login from "./Auth/Login";
-import Register from "./Auth/Register";
-import RecordList from "./Records/RecordList";
-import RecordForm from "./Records/RecordForm";
-import CategoryList from "./Categories/CategoryList";
-import CategoryForm from "./Categories/CategoryForm";
-import SingleRecord from "./Records/SingleRecord";
+import Login from "../Auth/Login";
+import Register from "../Auth/Register";
+import RecordList from "../Records/RecordList";
+import RecordForm from "../Records/RecordForm";
+import CategoryList from "../Categories/CategoryList";
+import CategoryForm from "../Categories/CategoryForm";
+import SingleRecord from "../Records/SingleRecord";
 import Layout from "./Layout";
 import PrivateRoutes from "./PrivateRoutes";
-import { UserContext } from "./Context/UserContext";
 import Welcome from "./Welcome";
+import { UserContext } from "../Context/UserContext";
 
 function App() {
-	// Simulated authentication state
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [userContext, setUserContext] = useContext(UserContext)
 
-	const handleLogin = () => {
-		// Simulate a successful login
-		setIsLoggedIn(true);
-	};
-
-	const handleLogout = () => {
-		// Simulate a logout
-		setIsLoggedIn(false);
-	};
-
-	const verifyUser = useCallback(() => {
-		fetch(process.env.REACT_APP_API_ENDPOINT + "api/user/refreshToken", {
-		  method: "POST",
-		  credentials: "include",
-		  headers: { "Content-Type": "application/json" },
-		}).then(async response => {
-		  if (response.ok) {
-			const data = await response.json()
-			setUserContext(oldValues => {
-			  return { ...oldValues, token: data.token }
-			})
-		  } else {
-			setUserContext(oldValues => {
-			  return { ...oldValues, token: null }
-			})
-		  }
-		  // call refreshToken every 5 minutes to renew the authentication token.
-		  setTimeout(verifyUser, 5 * 60 * 1000)
-		})
-	  }, [setUserContext])
+	// const verifyUser = useCallback(() => {
+	// 	fetch(process.env.REACT_APP_API_ENDPOINT + "api/user/refreshToken", {
+	// 	  method: "POST",
+	// 	  credentials: "include",
+	// 	  headers: { "Content-Type": "application/json" },
+	// 	}).then(async response => {
+	// 	  if (response.ok) {
+	// 		const data = await response.json()
+	// 		setUserContext(oldValues => {
+	// 		  return { ...oldValues, token: data.token }
+	// 		})
+	// 	  } else {
+	// 		setUserContext(oldValues => {
+	// 		  return { ...oldValues, token: null }
+	// 		})
+	// 	  }
+	// 	  // call refreshToken every 5 minutes to renew the authentication token.
+	// 	  setTimeout(verifyUser, 5 * 60 * 1000)
+	// 	})
+	//   }, [setUserContext])
 	
-	  useEffect(() => {
-		verifyUser()
-	  }, [verifyUser])
+	//   useEffect(() => {
+	// 	verifyUser()
+	//   }, [verifyUser])
 
 	   /**
    * Sync logout across tabs
@@ -103,8 +88,6 @@ function App() {
 					{/* Add more routes as needed */}
 					{/* </Route> */}
 				</Routes>
-
-				{isLoggedIn && <button onClick={handleLogout}>Logout</button>}
 			</Layout>
 		</Router>
 	);

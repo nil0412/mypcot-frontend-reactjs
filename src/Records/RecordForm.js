@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Switch from "react-switch";
 import Select from "react-select";
@@ -13,9 +14,17 @@ function RecordForm() {
 
 	const [userContext, setUserContext] = useContext(UserContext);
 
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		// Fetch the list of categories from the backend using fetch
-		fetch(process.env.REACT_APP_API_ENDPOINT + "api/categories")
+		fetch(process.env.REACT_APP_API_ENDPOINT + "api/categories", {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${userContext.token}`,
+				"Content-Type": "application/json",
+			},
+		})
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
@@ -29,6 +38,7 @@ function RecordForm() {
 						label: category.name,
 					}))
 				);
+				setCategories([{ value: "Not Specified", label: "Not Specified" }, ...categories]);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -42,7 +52,7 @@ function RecordForm() {
 		const newRecord = {
 			name,
 			description,
-			category: category !== null ? category.value : "Category not specified",
+			category: category !== null ? category.value : "Not Specified",
 			active,
 		};
 
@@ -58,11 +68,12 @@ function RecordForm() {
 			.then((response) => {
 				if (response.ok) {
 					// Handle success, e.g., redirect or show a success message
-
+					navigate("/records");
 					console.log("Form data to be submitted");
 				} else {
 					// Handle error, e.g., show an error message
-
+					setName("");
+					setDescription("");
 					console.log("Form data NOT submitted");
 				}
 			})
@@ -81,7 +92,7 @@ function RecordForm() {
 					<label htmlFor="name" className="col-sm-2 col-form-label">
 						Name
 					</label>
-					<hr />
+					<p></p>
 					<div className="col-sm-10">
 						<input
 							type="text"
@@ -93,12 +104,12 @@ function RecordForm() {
 						/>
 					</div>
 				</div>
-
+				<hr />
 				<div className="form-group">
 					<label htmlFor="description" className="col-sm-2 col-form-label">
 						Description
 					</label>
-					<hr />
+					<p></p>
 					<textarea
 						className="form-control"
 						id="description"
@@ -107,45 +118,27 @@ function RecordForm() {
 						onChange={(e) => setDescription(e.target.value)}
 						required></textarea>
 				</div>
+				<hr></hr>
 				<div className="col-auto my-1">
-					<label className="mr-sm-2 sr-only" htmlFor="category">
-						Category
-					</label>
-					<hr />
+					<p>
+					Category 
+					</p>
+					<p></p>
 					<Select
+						id="category"
 						options={categories}
 						value={category}
 						onChange={setCategory}
 					/>
-					{/* <select
-						className="custom-select mr-sm-2 p-2"
-						id="category"
-						name="category"
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						required>
-						<option value="category-1">Category 1</option>
-						<option value="category-2">Category 2</option>
-						<option value="category-3">Category 3</option>
-					</select> */}
 				</div>
 				<hr />
 				<div className="form-check">
-					<label className="form-check-label" htmlFor="exampleCheck1">
+					<label className="form-check-label mx-3" htmlFor="exampleCheck1">
 						Active
 					</label>
 					<Switch checked={active} onChange={() => setActive(!active)} />
-					{/* <input
-						type="checkbox"
-						className="form-check-input"
-						id="checkbox"
-						checked={active}
-						onChange={(e) => setActive(e.target.checked)}
-					/>
-					<label className="form-check-label" htmlFor="exampleCheck1">
-						Active
-					</label> */}
 				</div>
+				<hr></hr>
 				<button type="submit" className="btn btn-primary">
 					Create Record
 				</button>

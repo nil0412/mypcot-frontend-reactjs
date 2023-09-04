@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/App';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { UserProvider } from './components/Context/UserContext'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { UserProvider } from './Context/UserContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

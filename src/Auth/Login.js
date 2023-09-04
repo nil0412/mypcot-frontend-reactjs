@@ -67,7 +67,7 @@ function Login() {
 	useEffect(() => {
 		// Check the status code and navigate to another page if it's not a failure (e.g., 200)
 		if (statusCode === 200) {
-			navigate("/records/create"); // Replace with your target route
+			navigate("/records"); // Replace with your target route
 		}
 	}, [statusCode, navigate]);
 

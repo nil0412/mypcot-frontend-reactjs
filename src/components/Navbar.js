@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../Context/UserContext";
 
 function Navbar() {
+	const [userContext, setUserContext] = useContext(UserContext);
+
+	const logoutHandler = () => {
+		fetch(process.env.REACT_APP_API_ENDPOINT + "api/user/logout", {
+			credentials: "include",
+			// Pass authentication token as bearer token in header
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userContext.token}`,
+			},
+		}).then(async (response) => {
+			setUserContext((oldValues) => {
+				return { ...oldValues, details: undefined, token: null };
+			});
+			window.localStorage.setItem("logout", Date.now());
+		});
+	};
+
 	return (
 		// <nav className="navbar navbar-light" style={{backgroundColor: ''#e3f2fd',}}>
-		<nav className="navbar navbar-expand-lg navbar navbar-dark bg-primary">
+		<nav className="navbar navbar-expand-lg navbar navbar-dark bg-primary sticky-top">
 			<Link to="/" className="navbar-brand" relative="path">
 				MyApp
 			</Link>
@@ -26,17 +45,20 @@ function Navbar() {
 						</Link>
 					</li>
 					<li className="nav-item">
-						<Link to="/login" className="nav-link" relative="path">
-							Login
+						<Link to="/records" className="nav-link" relative="path">
+							Records
 						</Link>
 					</li>
 					<li className="nav-item">
-						<Link to="/register" className="nav-link" relative="path">
-							Register
+						<Link to="/records/create" className="nav-link" relative="path">
+							Create_new_records
 						</Link>
 					</li>
 				</ul>
 			</div>
+			<button onClick={logoutHandler} className="btn btn-primary">
+				Logout
+			</button>
 		</nav>
 	);
 }
